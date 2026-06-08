@@ -24,11 +24,22 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      # enablement: true switches the repo's Pages source to "GitHub Actions"
-      # automatically, so no manual repo setting change is needed.
+      # Force the repo's Pages build type to "workflow" so the legacy branch
+      # builder stops winning. enablement covers the not-yet-enabled case;
+      # the API PUT converts an existing branch deploy. Non-fatal if the token
+      # lacks permission (then the Pages Source must be switched manually).
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Force Pages source to GitHub Actions
+        continue-on-error: true
+        run: |
+          curl -sS -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"build_type":"workflow"}'
       - run: npm run build
         env:
           VITE_LIVEBLOCKS_PUBLIC_KEY: ${{ secrets.VITE_LIVEBLOCKS_PUBLIC_KEY }}
