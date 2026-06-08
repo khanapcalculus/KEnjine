@@ -24,6 +24,11 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # enablement: true switches the repo's Pages source to "GitHub Actions"
+      # automatically, so no manual repo setting change is needed.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - run: npm run build
         env:
           VITE_LIVEBLOCKS_PUBLIC_KEY: ${{ secrets.VITE_LIVEBLOCKS_PUBLIC_KEY }}
