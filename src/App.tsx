@@ -59,6 +59,9 @@ export default function App() {
         name: identity.name,
         color: identity.color,
         selectedId: null,
+        laser: null,
+        viewport: null,
+        presenting: false,
       }}
       initialStorage={{
         pages: new LiveMap<string, LiveObject<{ name: string; order: number }>>([

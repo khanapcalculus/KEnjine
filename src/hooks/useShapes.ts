@@ -14,6 +14,11 @@ export function useShapeMutations() {
     storage.get("shapes").set(shape.id, new LiveObject(shape));
   }, []);
 
+  const addShapes = useMutation(({ storage }, shapes: Shape[]) => {
+    const map = storage.get("shapes");
+    for (const shape of shapes) map.set(shape.id, new LiveObject(shape));
+  }, []);
+
   const updateShape = useMutation(
     ({ storage }, id: string, patch: Partial<Shape>) => {
       const s = storage.get("shapes").get(id);
@@ -33,7 +38,7 @@ export function useShapeMutations() {
     }
   }, []);
 
-  return { addShape, updateShape, deleteShape, clearPage };
+  return { addShape, addShapes, updateShape, deleteShape, clearPage };
 }
 
 export function usePageMutations() {
